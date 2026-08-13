@@ -33,10 +33,10 @@
       position: fixed;
       width: 8px;
       height: 8px;
-      background: rgba(167, 139, 250, 0.4);
+      background: rgba(167, 139, 250, 0.35);
       border-radius: 50%;
       pointer-events: none;
-      animation: rise 12s linear infinite;
+      animation: rise 14s linear infinite;
       z-index: 0;
     }
     @keyframes rise {
@@ -46,138 +46,24 @@
       100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
     }
 
-    /* ===== AUTH / LANDING ===== */
-    .auth-screen {
-      min-height: 100vh;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      position: relative;
-      z-index: 1;
-    }
-    .auth-screen.active { display: flex; }
-
-    .container {
-      text-align: center;
-      max-width: 720px;
-      animation: fadeInUp 0.9s ease-out;
-    }
-
-    .icon-row {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .icon-box {
-      width: 60px;
-      height: 60px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      color: var(--accent);
-      transition: all 0.3s ease;
-      animation: float 3s ease-in-out infinite;
-    }
-    .icon-box:nth-child(2) { animation-delay: 0.4s; }
-    .icon-box:nth-child(3) { animation-delay: 0.8s; }
-    .icon-box:nth-child(4) { animation-delay: 1.2s; }
-    .icon-box:hover {
-      background: rgba(167,139,250,0.2);
-      transform: translateY(-6px) scale(1.08);
-      box-shadow: 0 10px 25px rgba(167,139,250,0.3);
-    }
-
-    .auth-screen h1 {
-      font-size: clamp(2.2rem, 6vw, 3.4rem);
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-      background: linear-gradient(90deg, #fff, #c4b5fd, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .highlight {
-      color: #a78bfa;
-      -webkit-text-fill-color: #a78bfa;
-    }
-
-    .auth-screen p {
-      font-size: 1.15rem;
-      color: var(--muted);
-      margin-bottom: 2.5rem;
-      opacity: 0.9;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-      color: white;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 1rem 2.4rem;
-      border-radius: 50px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 25px rgba(139,92,246,0.4);
-      position: relative;
-      overflow: hidden;
-    }
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: 0.5s;
-    }
-    .btn:hover::before { left: 100%; }
-    .btn:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 12px 35px rgba(139,92,246,0.55);
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    /* ===== APP (after login) ===== */
-    .app {
-      display: none;
-      min-height: 100vh;
-      position: relative;
-      z-index: 1;
-    }
-    .app.active { display: block; }
-
+    /* Header */
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 16px 32px;
-      background: rgba(15,12,41,0.7);
+      background: rgba(15,12,41,0.75);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 50;
+    }
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 28px;
     }
 
     .logo {
@@ -219,7 +105,7 @@
     }
 
     .user-chip {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 10px;
       background: rgba(255,255,255,0.06);
@@ -227,6 +113,8 @@
       border-radius: 50px;
       padding: 5px 14px 5px 5px;
     }
+    .user-chip.show { display: flex; }
+
     .user-chip img {
       width: 34px;
       height: 34px;
@@ -252,17 +140,48 @@
     .badge-dev { background: #3b82f6; color: white; }
     .badge-member { background: rgba(255,255,255,0.1); color: #c4b5fd; }
 
-    .btn-sm {
-      padding: 8px 16px;
-      font-size: 0.85rem;
-      border-radius: 8px;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
     }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139,92,246,0.4);
+    }
+
     .btn-danger {
       background: transparent;
       color: #f87171;
       border: 1px solid rgba(248,113,113,0.3);
+      padding: 8px 14px;
     }
-    .btn-danger:hover { background: rgba(248,113,113,0.1); }
+    .btn-danger:hover {
+      background: rgba(248,113,113,0.1);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover {
+      color: white;
+      background: rgba(255,255,255,0.05);
+      box-shadow: none;
+    }
 
     /* Pages */
     .page {
@@ -270,27 +189,36 @@
       padding: 40px 24px;
       max-width: 1100px;
       margin: 0 auto;
-      animation: fadeInUp 0.5s ease;
+      animation: fadeIn 0.4s ease;
+      position: relative;
+      z-index: 1;
     }
     .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     /* HOME */
     .home-hero {
       text-align: center;
-      padding: 60px 0 40px;
+      padding: 50px 0 30px;
     }
     .greeting {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      min-height: 28px;
     }
     .home-hero h1 {
-      font-size: clamp(3rem, 9vw, 5.5rem);
+      font-size: clamp(3.2rem, 10vw, 5.8rem);
       font-weight: 800;
       background: linear-gradient(90deg, #fff, #c4b5fd, #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      line-height: 1.1;
     }
     .discord-link {
       display: inline-flex;
@@ -314,15 +242,15 @@
     }
     .video-section h3 {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .video-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 18px;
     }
     .video-card {
@@ -448,7 +376,6 @@
       border-radius: 14px;
       font-size: 0.92rem;
       line-height: 1.45;
-      animation: fadeInUp 0.25s ease;
     }
     .msg.me {
       align-self: flex-end;
@@ -497,7 +424,38 @@
       padding: 40px;
     }
 
-    /* Modal */
+    /* Login Modal */
+    .login-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    .login-modal.active { display: flex; }
+
+    .login-card {
+      background: #1a1635;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .login-card h2 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+    .login-card p {
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -537,8 +495,6 @@
       justify-content: flex-end;
     }
 
-    .hidden { display: none !important; }
-
     @media (max-width: 800px) {
       .tickets-layout { grid-template-columns: 1fr; height: auto; }
       .ticket-list { max-height: 260px; }
@@ -557,128 +513,129 @@
   <div class="particle" style="left:75%;animation-delay:3s;"></div>
   <div class="particle" style="left:90%;animation-delay:5s;width:7px;height:7px;"></div>
 
-  <!-- ===== LANDING / AUTH ===== -->
-  <div class="auth-screen active" id="authScreen">
-    <div class="container">
-      <div class="icon-row">
-        <div class="icon-box"><i class="fas fa-code"></i></div>
-        <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
-        <div class="icon-box"><i class="fas fa-rocket"></i></div>
-        <div class="icon-box"><i class="fas fa-magic"></i></div>
+  <!-- HEADER (always visible) -->
+  <header>
+    <div class="left">
+      <a href="#" class="logo" onclick="showPage('home')">WYVERN<span>.</span></a>
+      <nav class="nav">
+        <button id="navHome" class="active" onclick="showPage('home')">
+          <i class="fas fa-home"></i> Home
+        </button>
+        <button id="navTickets" onclick="showPage('tickets')">
+          <i class="fas fa-ticket-alt"></i> Tickets
+        </button>
+      </nav>
+    </div>
+
+    <div class="user-area">
+      <!-- Shown when logged in -->
+      <div class="user-chip" id="userChip">
+        <img id="userAvatar" src="" alt="">
+        <div class="user-meta">
+          <span class="name" id="userName">User</span>
+          <span class="badge" id="userBadge">Member</span>
+        </div>
       </div>
 
-      <h1>Welcome to <span class="highlight">Wyvern</span></h1>
-      <p>Clean. Powerful. Built different.</p>
+      <!-- Login button (shown when NOT logged in) -->
+      <button class="btn" id="loginBtn" onclick="openLoginModal()">
+        <i class="fab fa-discord"></i> Login
+      </button>
 
-      <button class="btn" onclick="startDiscordLogin()">
-        <i class="fab fa-discord"></i>
-        Continue with Discord
+      <!-- Logout button (shown when logged in) -->
+      <button class="btn btn-danger" id="logoutBtn" style="display:none;" onclick="logout()">
+        Logout
       </button>
     </div>
-  </div>
+  </header>
 
-  <!-- ===== APP ===== -->
-  <div class="app" id="app">
-    <header>
-      <div style="display:flex;align-items:center;gap:28px;">
-        <a href="#" class="logo" onclick="showPage('home')">WYVERN<span>.</span></a>
-        <nav class="nav">
-          <button id="navHome" class="active" onclick="showPage('home')">
-            <i class="fas fa-home"></i> Home
-          </button>
-          <button id="navTickets" onclick="showPage('tickets')">
-            <i class="fas fa-ticket-alt"></i> Tickets
-          </button>
-        </nav>
-      </div>
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="home-hero">
+      <div class="greeting" id="greeting"></div>
+      <h1>WYVERN</h1>
+      <a href="https://discord.gg/wyvernscripts" target="_blank" class="discord-link">
+        <i class="fab fa-discord"></i> discord.gg/wyvernscripts
+      </a>
 
-      <div class="user-area">
-        <div class="user-chip">
-          <img id="userAvatar" src="" alt="">
-          <div class="user-meta">
-            <span class="name" id="userName">User</span>
-            <span class="badge" id="userBadge">Member</span>
+      <div class="video-section">
+        <h3>Preview</h3>
+        <div class="video-grid">
+          <div class="video-card">
+            <video autoplay muted loop playsinline>
+              <source src="video1.mp4" type="video/mp4">
+            </video>
           </div>
-        </div>
-        <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
-      </div>
-    </header>
-
-    <!-- HOME -->
-    <div class="page" id="page-home">
-      <div class="home-hero">
-        <div class="greeting" id="greeting">Welcome back</div>
-        <h1>WYVERN</h1>
-        <a href="https://discord.gg/wyvernscripts" target="_blank" class="discord-link">
-          <i class="fab fa-discord"></i> discord.gg/wyvernscripts
-        </a>
-
-        <div class="video-section">
-          <h3>Preview</h3>
-          <div class="video-grid">
-            <div class="video-card">
-              <video autoplay muted loop playsinline>
-                <source src="video1.mp4" type="video/mp4">
-              </video>
-            </div>
-            <div class="video-card">
-              <video autoplay muted loop playsinline>
-                <source src="video2.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TICKETS -->
-    <div class="page" id="page-tickets">
-      <div class="tickets-header">
-        <h2><i class="fas fa-ticket-alt"></i> Tickets</h2>
-        <button class="btn btn-sm" onclick="openCreateModal()">
-          <i class="fas fa-plus"></i> New Ticket
-        </button>
-      </div>
-
-      <div class="tickets-layout">
-        <div class="ticket-list">
-          <div class="ticket-list-header" id="listHeader">Your Tickets</div>
-          <div class="ticket-items" id="ticketList"></div>
-        </div>
-
-        <div class="ticket-chat">
-          <div class="empty-state" id="chatEmpty">
-            <i class="fas fa-comments" style="font-size:2.5rem;opacity:0.4;"></i>
-            <div>Select a ticket or create a new one</div>
-          </div>
-
-          <div id="chatActive" class="hidden" style="display:flex;flex-direction:column;height:100%;">
-            <div class="chat-header">
-              <div>
-                <h3 id="chatTitle">Ticket</h3>
-                <span id="chatMeta"></span>
-              </div>
-              <div id="staffActions"></div>
-            </div>
-            <div class="messages" id="messages"></div>
-            <div class="chat-input">
-              <input type="text" id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
-              <button class="btn btn-sm" onclick="sendMessage()">Send</button>
-            </div>
+          <div class="video-card">
+            <video autoplay muted loop playsinline>
+              <source src="video2.mp4" type="video/mp4">
+            </video>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL -->
+  <!-- TICKETS -->
+  <div class="page" id="page-tickets">
+    <div class="tickets-header">
+      <h2><i class="fas fa-ticket-alt"></i> Tickets</h2>
+      <button class="btn" onclick="handleNewTicket()">
+        <i class="fas fa-plus"></i> New Ticket
+      </button>
+    </div>
+
+    <div class="tickets-layout">
+      <div class="ticket-list">
+        <div class="ticket-list-header" id="listHeader">Tickets</div>
+        <div class="ticket-items" id="ticketList"></div>
+      </div>
+
+      <div class="ticket-chat">
+        <div class="empty-state" id="chatEmpty">
+          <i class="fas fa-comments" style="font-size:2.5rem;opacity:0.4;"></i>
+          <div>Select a ticket or create a new one</div>
+        </div>
+
+        <div id="chatActive" style="display:none;flex-direction:column;height:100%;">
+          <div class="chat-header">
+            <div>
+              <h3 id="chatTitle">Ticket</h3>
+              <span id="chatMeta"></span>
+            </div>
+            <div id="staffActions"></div>
+          </div>
+          <div class="messages" id="messages"></div>
+          <div class="chat-input">
+            <input type="text" id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+            <button class="btn" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="login-modal" id="loginModal">
+    <div class="login-card">
+      <h2>Login to Wyvern</h2>
+      <p>You need to login with Discord to create tickets</p>
+      <button class="btn" style="width:100%;justify-content:center;padding:14px;" onclick="startDiscordLogin()">
+        <i class="fab fa-discord"></i> Continue with Discord
+      </button>
+      <br><br>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="closeLoginModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- CREATE / RENAME MODAL -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <h3 id="modalTitle">New Ticket</h3>
       <input type="text" id="modalInput" placeholder="What do you need help with?">
       <div class="modal-actions">
-        <button class="btn btn-sm" style="background:transparent;border:1px solid var(--border);" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-sm" id="modalConfirm" onclick="confirmModal()">Create</button>
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn" id="modalConfirm" onclick="confirmModal()">Create</button>
       </div>
     </div>
   </div>
@@ -696,6 +653,7 @@
       await loadConfig();
       loadTickets();
 
+      // Coming back from Discord
       const params = new URLSearchParams(window.location.search);
       if (params.has("id") && params.has("username")) {
         const user = {
@@ -706,15 +664,18 @@
         localStorage.setItem("wyvern_user", JSON.stringify(user));
         window.history.replaceState({}, document.title, window.location.pathname);
         currentUser = user;
-        enterApp();
+        updateAuthUI();
+        showPage("home");
         return;
       }
 
+      // Restore session
       const saved = localStorage.getItem("wyvern_user");
       if (saved) {
         currentUser = JSON.parse(saved);
-        enterApp();
       }
+      updateAuthUI();
+      renderTicketList();
     }
 
     async function loadConfig() {
@@ -744,33 +705,50 @@
       window.location.href = DISCORD_AUTH_URL;
     }
 
+    function openLoginModal() {
+      document.getElementById("loginModal").classList.add("active");
+    }
+    function closeLoginModal() {
+      document.getElementById("loginModal").classList.remove("active");
+    }
+
     function logout() {
       localStorage.removeItem("wyvern_user");
       currentUser = null;
-      document.getElementById("app").classList.remove("active");
-      document.getElementById("authScreen").classList.add("active");
-    }
-
-    function enterApp() {
-      document.getElementById("authScreen").classList.remove("active");
-      document.getElementById("app").classList.add("active");
-      updateUserUI();
+      updateAuthUI();
       showPage("home");
+      renderTicketList();
     }
 
-    function updateUserUI() {
-      document.getElementById("userAvatar").src = currentUser.avatar;
-      document.getElementById("userName").textContent = currentUser.username;
+    function updateAuthUI() {
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const userChip = document.getElementById("userChip");
+      const greeting = document.getElementById("greeting");
 
-      const badge = getBadge(currentUser.id);
-      const el = document.getElementById("userBadge");
-      el.textContent = badge.text;
-      el.className = "badge " + badge.class;
+      if (currentUser) {
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-flex";
+        userChip.classList.add("show");
 
-      document.getElementById("greeting").textContent = `Welcome back, ${currentUser.username}`;
+        document.getElementById("userAvatar").src = currentUser.avatar;
+        document.getElementById("userName").textContent = currentUser.username;
+
+        const badge = getBadge(currentUser.id);
+        const badgeEl = document.getElementById("userBadge");
+        badgeEl.textContent = badge.text;
+        badgeEl.className = "badge " + badge.class;
+
+        greeting.textContent = `Welcome back, ${currentUser.username}`;
+      } else {
+        loginBtn.style.display = "inline-flex";
+        logoutBtn.style.display = "none";
+        userChip.classList.remove("show");
+        greeting.textContent = "";
+      }
     }
 
-    // Everyone is Member by default. Only IDs in config.txt get higher roles.
+    // Everyone is Member unless listed in config.txt
     function getBadge(id) {
       if (config.owners.some(o => o.id === id)) return { text: "Owner", class: "badge-owner" };
       if (config.devs.some(d => d.id === id)) return { text: "Dev", class: "badge-dev" };
@@ -778,6 +756,7 @@
     }
 
     function isStaff() {
+      if (!currentUser) return false;
       const b = getBadge(currentUser.id).text;
       return b === "Owner" || b === "Dev";
     }
@@ -791,14 +770,34 @@
     }
 
     // ===== TICKETS =====
+    function handleNewTicket() {
+      if (!currentUser) {
+        openLoginModal();
+        return;
+      }
+      openCreateModal();
+    }
+
     function renderTicketList() {
       const list = document.getElementById("ticketList");
       const header = document.getElementById("listHeader");
-      let visible = isStaff() ? tickets : tickets.filter(t => t.authorId === currentUser.id);
-      header.textContent = isStaff() ? "All Tickets" : "Your Tickets";
+
+      let visible = [];
+      if (currentUser && isStaff()) {
+        visible = tickets;
+        header.textContent = "All Tickets";
+      } else if (currentUser) {
+        visible = tickets.filter(t => t.authorId === currentUser.id);
+        header.textContent = "Your Tickets";
+      } else {
+        visible = []; // guests see nothing or we can show public tickets later
+        header.textContent = "Tickets";
+      }
 
       if (visible.length === 0) {
-        list.innerHTML = `<div style="padding:30px;text-align:center;color:var(--muted);font-size:0.9rem;">No tickets yet</div>`;
+        list.innerHTML = `<div style="padding:30px;text-align:center;color:var(--muted);font-size:0.9rem;">
+          ${currentUser ? "No tickets yet" : "Login to view your tickets"}
+        </div>`;
         return;
       }
 
@@ -816,12 +815,22 @@
     }
 
     function openTicket(id) {
+      if (!currentUser) {
+        openLoginModal();
+        return;
+      }
+
       activeTicketId = id;
       const ticket = tickets.find(t => t.id === id);
       if (!ticket) return;
 
-      document.getElementById("chatEmpty").classList.add("hidden");
-      document.getElementById("chatActive").classList.remove("hidden");
+      // Members can only open their own tickets
+      if (!isStaff() && ticket.authorId !== currentUser.id) {
+        alert("You can only view your own tickets");
+        return;
+      }
+
+      document.getElementById("chatEmpty").style.display = "none";
       document.getElementById("chatActive").style.display = "flex";
 
       document.getElementById("chatTitle").textContent = ticket.title;
@@ -830,8 +839,8 @@
       const actions = document.getElementById("staffActions");
       if (isStaff()) {
         actions.innerHTML = `
-          <button class="btn btn-sm" style="background:transparent;border:1px solid var(--border);margin-right:6px;" onclick="openRenameModal()">Rename</button>
-          <button class="btn btn-sm btn-danger" onclick="toggleTicketStatus()">${ticket.status === "open" ? "Close" : "Reopen"}</button>
+          <button class="btn btn-ghost" style="margin-right:6px;" onclick="openRenameModal()">Rename</button>
+          <button class="btn btn-danger" onclick="toggleTicketStatus()">${ticket.status === "open" ? "Close" : "Reopen"}</button>
         `;
       } else {
         actions.innerHTML = "";
@@ -853,6 +862,11 @@
     }
 
     function sendMessage() {
+      if (!currentUser) {
+        openLoginModal();
+        return;
+      }
+
       const input = document.getElementById("msgInput");
       const text = input.value.trim();
       if (!text || !activeTicketId) return;
