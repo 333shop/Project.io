@@ -1,1154 +1,256 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wyvern</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: #000;
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .glow {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 70% at 40% 50%, rgba(120,20,180,0.45) 0%, rgba(80,10,140,0.25) 30%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* NAV */
-    nav {
-      position: relative;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 48px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .nav-left { display: flex; align-items: center; gap: 40px; }
-
-    .logo {
-      width: 38px; height: 38px;
-      background: #1a1a1a;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(255,255,255,0.08);
-      cursor: pointer;
-    }
-
-    .nav-links { display: flex; gap: 32px; }
-
-    .nav-links a {
-      color: #a1a1aa;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.2s;
-      cursor: pointer;
-    }
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
-
-    .nav-right { display: flex; align-items: center; gap: 16px; }
-
-    .login-btn {
-      background: none; border: none;
-      color: #a1a1aa; font-size: 0.95rem; font-weight: 500;
-      cursor: pointer;
-    }
-    .login-btn:hover { color: #fff; }
-
-    .get-started {
-      background: #fff; color: #000;
-      padding: 10px 20px; border-radius: 999px;
-      font-size: 0.95rem; font-weight: 600;
-      border: none; cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .get-started:hover { background: #e5e5e5; }
-
-    .user-menu { display: none; align-items: center; gap: 14px; }
-
-    .user-info {
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(255,255,255,0.06);
-      padding: 8px 16px; border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-    }
-    .user-info:hover { background: rgba(255,255,255,0.1); }
-
-    .user-avatar {
-      width: 28px; height: 28px;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 600;
-    }
-
-    .logout-btn {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #a1a1aa;
-      padding: 8px 16px; border-radius: 999px;
-      font-size: 0.85rem; cursor: pointer;
-    }
-    .logout-btn:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
-
-    /* PAGES */
-    .page { display: none; position: relative; z-index: 5; }
-    .page.active { display: block; }
-
-    /* HOME */
-    .hero {
-      display: flex; align-items: center;
-      max-width: 1400px; margin: 0 auto;
-      padding: 80px 48px 60px; gap: 60px;
-      min-height: calc(100vh - 100px);
-    }
-
-    .left { flex: 1; max-width: 560px; }
-    .left h1 {
-      font-size: 3.5rem; font-weight: 700;
-      line-height: 1.15; letter-spacing: -1.5px;
-      margin-bottom: 24px;
-    }
-    .left p {
-      font-size: 1.15rem; line-height: 1.7;
-      color: #a1a1aa; margin-bottom: 40px; max-width: 480px;
-    }
-
-    .buttons { display: flex; gap: 14px; }
-
-    .btn-primary {
-      background: #fff; color: #000;
-      padding: 14px 28px; border-radius: 999px;
-      font-size: 1rem; font-weight: 600;
-      border: none; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-primary:hover { background: #e5e5e5; }
-
-    .btn-secondary {
-      background: transparent; color: #fff;
-      padding: 14px 28px; border-radius: 999px;
-      font-size: 1rem; font-weight: 500;
-      border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
-    }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
-
-    .right { flex: 1.1; display: flex; justify-content: flex-end; }
-
-    .video-wrapper {
-      width: 100%; max-width: 560px;
-      border-radius: 20px; overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
-    }
-    video { width: 100%; display: block; background: #0a0a0a; }
-
-    /* FEATURES */
-    .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 48px 100px;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-    .section-header h2 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 16px;
-    }
-    .section-header p {
-      color: #a1a1aa;
-      font-size: 1.15rem;
-      max-width: 560px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    .feature-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 32px 28px;
-      transition: all 0.25s ease;
-    }
-    .feature-card:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(168, 85, 247, 0.35);
-      transform: translateY(-4px);
-    }
-
-    .feature-icon {
-      width: 48px; height: 48px;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-
-    .feature-card h3 {
-      font-size: 1.25rem;
-      margin-bottom: 10px;
-    }
-    .feature-card p {
-      color: #a1a1aa;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    /* ABOUT */
-    .about-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-    }
-
-    .about-text h2 {
-      font-size: 2.6rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-      letter-spacing: -1px;
-    }
-    .about-text p {
-      color: #a1a1aa;
-      font-size: 1.1rem;
-      line-height: 1.75;
-      margin-bottom: 20px;
-    }
-
-    .about-points {
-      margin-top: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .about-point {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-    .about-point i {
-      color: #a855f7;
-      margin-top: 4px;
-    }
-    .about-point span {
-      color: #d4d4d8;
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-
-    .discord-box {
-      background: rgba(88, 101, 242, 0.1);
-      border: 1px solid rgba(88, 101, 242, 0.3);
-      border-radius: 16px;
-      padding: 28px;
-      text-align: center;
-    }
-    .discord-box i {
-      font-size: 42px;
-      color: #5865F2;
-      margin-bottom: 16px;
-    }
-    .discord-box h3 {
-      font-size: 1.3rem;
-      margin-bottom: 8px;
-    }
-    .discord-box p {
-      color: #a1a1aa;
-      font-size: 0.95rem;
-      margin-bottom: 20px;
-    }
-    .discord-btn {
-      background: #5865F2;
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.2s;
-    }
-    .discord-btn:hover { background: #4752c4; }
-
-    /* TICKETS */
-    .ticket-layout {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 24px;
-      min-height: 600px;
-    }
-
-    .ticket-sidebar {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ticket-sidebar h3 {
-      font-size: 1.1rem;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .new-ticket-btn {
-      background: #fff;
-      color: #000;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 20px;
-      width: 100%;
-    }
-    .new-ticket-btn:hover { background: #e5e5e5; }
-
-    .ticket-list {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .ticket-item {
-      padding: 12px 14px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .ticket-item:hover, .ticket-item.active {
-      background: rgba(168, 85, 247, 0.1);
-      border-color: rgba(168, 85, 247, 0.3);
-    }
-
-    .ticket-item .ticket-title {
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    .ticket-item .ticket-meta {
-      font-size: 0.8rem;
-      color: #71717a;
-    }
-
-    .ticket-status {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      margin-left: 6px;
-    }
-    .status-open { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-    .status-closed { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-
-    .ticket-main {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ticket-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .ticket-messages {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-height: 360px;
-    }
-
-    .message {
-      max-width: 75%;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    .message.user {
-      background: rgba(168, 85, 247, 0.15);
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-    .message.staff {
-      background: rgba(255,255,255,0.06);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-    .message .msg-meta {
-      font-size: 0.75rem;
-      color: #71717a;
-      margin-bottom: 4px;
-    }
-
-    .ticket-input-area {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      gap: 12px;
-    }
-
-    .ticket-input-area input {
-      flex: 1;
-      background: #1a1a1a;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 12px 16px;
-      color: #fff;
-      outline: none;
-    }
-    .ticket-input-area input:focus { border-color: #a855f7; }
-
-    .send-btn, .close-ticket-btn {
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .send-btn { background: #a855f7; color: #fff; }
-    .send-btn:hover { background: #9333ea; }
-    .close-ticket-btn { background: rgba(239,68,68,0.15); color: #f87171; }
-    .close-ticket-btn:hover { background: rgba(239,68,68,0.25); }
-
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #71717a;
-      gap: 12px;
-    }
-    .empty-state i { font-size: 42px; opacity: 0.4; }
-
-    /* MODALS (same as before) */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
-      display: none; align-items: center; justify-content: center;
-      z-index: 100; padding: 20px;
-    }
-    .modal-overlay.active { display: flex; }
-
-    .modal {
-      background: #111;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 36px;
-      width: 100%; max-width: 400px;
-      position: relative;
-      animation: modalIn 0.25s ease;
-    }
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(12px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .modal h2 { font-size: 1.6rem; margin-bottom: 6px; }
-    .modal .subtitle { color: #a1a1aa; font-size: 0.95rem; margin-bottom: 28px; }
-
-    .form-group { margin-bottom: 18px; }
-    .form-group label { display: block; font-size: 0.85rem; color: #a1a1aa; margin-bottom: 6px; }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 13px 16px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-    }
-    .form-group input:focus, .form-group textarea:focus { border-color: #a855f7; }
-    .form-group input.error { border-color: #ef4444; }
-
-    .error-msg { color: #f87171; font-size: 0.8rem; margin-top: 6px; display: none; }
-    .error-msg.show { display: block; }
-
-    .form-warning {
-      background: rgba(245,158,11,0.1);
-      border: 1px solid rgba(245,158,11,0.25);
-      color: #fbbf24;
-      font-size: 0.82rem;
-      padding: 10px 14px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      display: none;
-    }
-    .form-warning.show { display: block; }
-
-    .modal-btn {
-      width: 100%;
-      background: #fff; color: #000;
-      border: none; padding: 14px;
-      border-radius: 999px;
-      font-size: 1rem; font-weight: 600;
-      cursor: pointer; margin-top: 8px;
-    }
-    .modal-btn:hover { background: #e5e5e5; }
-
-    .switch-text { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #a1a1aa; }
-    .switch-text span { color: #c084fc; cursor: pointer; font-weight: 500; }
-
-    .close-modal {
-      position: absolute; top: 18px; right: 18px;
-      background: none; border: none;
-      color: #a1a1aa; font-size: 1.3rem; cursor: pointer;
-    }
-    .close-modal:hover { color: #fff; }
-
-    .toast {
-      position: fixed; bottom: 30px; left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #166534; color: #bbf7d0;
-      padding: 12px 24px; border-radius: 12px;
-      font-size: 0.9rem; font-weight: 500;
-      opacity: 0; transition: all 0.3s ease;
-      z-index: 200; pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    @media (max-width: 1000px) {
-      .hero { flex-direction: column; text-align: center; padding: 60px 24px; gap: 50px; }
-      .left { max-width: 100%; }
-      .left h1 { font-size: 2.5rem; }
-      .buttons { justify-content: center; }
-      .right { justify-content: center; }
-      .nav-links { display: none; }
-      nav { padding: 18px 20px; }
-      .about-content { grid-template-columns: 1fr; }
-      .ticket-layout { grid-template-columns: 1fr; }
-      .section { padding: 60px 24px; }
-    }
-  </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Wyvern</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="glow"></div>
-
-  <!-- NAV -->
-  <nav>
-    <div class="nav-left">
-      <div class="logo" onclick="showPage('home')"><i class="fas fa-dragon"></i></div>
-      <div class="nav-links">
-        <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
-        <a onclick="showPage('features')" id="nav-features">Features</a>
-        <a onclick="showPage('about')" id="nav-about">About</a>
-        <a onclick="showPage('tickets')" id="nav-tickets">Tickets</a>
-      </div>
-    </div>
-
-    <div class="nav-right" id="guestButtons">
-      <button class="login-btn" onclick="openModal('login')">Login</button>
-      <button class="get-started" onclick="openModal('signup')">
-        Get Started <i class="fas fa-arrow-right" style="font-size:12px"></i>
-      </button>
-    </div>
-
-    <div class="user-menu" id="userMenu">
-      <div class="user-info" onclick="openModal('edit')">
-        <div class="user-avatar" id="userAvatar">U</div>
-        <span class="user-name" id="displayName">User</span>
-      </div>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </nav>
-
-  <!-- ==================== HOME ==================== -->
-  <div class="page active" id="page-home">
-    <section class="hero">
-      <div class="left">
-        <h1>Wyvern is the best<br>cheating service</h1>
-        <p>We are 100% safe and secure and we also have a great staff team.</p>
-        <div class="buttons" id="heroButtons">
-          <button class="btn-primary" onclick="openModal('signup')">
-            Get Started <i class="fas fa-arrow-right" style="font-size:13px"></i>
-          </button>
-          <button class="btn-secondary" onclick="showPage('features')">View Features</button>
-        </div>
-      </div>
-      <div class="right">
-        <div class="video-wrapper">
-          <video autoplay muted loop playsinline>
-            <source src="display.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ==================== FEATURES ==================== -->
-  <div class="page" id="page-features">
-    <div class="section">
-      <div class="section-header">
-        <h2>Powerful Features</h2>
-        <p>Everything you need to dominate. Built for performance, stability, and safety.</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-crosshairs"></i></div>
-          <h3>Aimbot</h3>
-          <p>Smooth, customizable aim assistance with multiple targeting modes, FOV control, and visibility checks. Designed to look natural.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-eye"></i></div>
-          <h3>ESP / Wallhack</h3>
-          <p>Full player ESP with boxes, skeletons, health bars, distance, and name tags. Highly configurable and optimized.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-shirt"></i></div>
-          <h3>Skin Changer</h3>
-          <p>Unlock and apply any skin instantly. Works across supported games with a clean and easy-to-use interface.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
-          <h3>Undetected</h3>
-          <p>Advanced protection methods and regular updates to stay under the radar. Safety is our top priority.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-sliders"></i></div>
-          <h3>Custom Configs</h3>
-          <p>Save and load your personal settings. Share configs with friends or switch between different playstyles in one click.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-          <h3>Performance</h3>
-          <p>Extremely lightweight. Minimal impact on FPS so you can play smoothly even on lower-end systems.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== ABOUT ==================== -->
-  <div class="page" id="page-about">
-    <div class="section">
-      <div class="about-content">
-        <div class="about-text">
-          <h2>Built for safety.<br>Trusted by players.</h2>
-          <p>
-            Wyvern was created with one main goal: deliver powerful tools without putting your account at unnecessary risk.
-            We focus on clean code, careful updates, and real human support.
-          </p>
-          <p>
-            Every release is tested before it goes out. We don’t rush updates and we don’t cut corners on security.
-            Our staff team is active daily and actually helps users instead of leaving them on read.
-          </p>
-
-          <div class="about-points">
-            <div class="about-point">
-              <i class="fas fa-check-circle"></i>
-              <span>Regular security updates and careful testing before every release</span>
-            </div>
-            <div class="about-point">
-              <i class="fas fa-check-circle"></i>
-              <span>Real human support — not bots, not copy-paste replies</span>
-            </div>
-            <div class="about-point">
-              <i class="fas fa-check-circle"></i>
-              <span>Private and respectful community</span>
-            </div>
-            <div class="about-point">
-              <i class="fas fa-check-circle"></i>
-              <span>Fast ticket responses and honest communication</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="discord-box">
-          <i class="fab fa-discord"></i>
-          <h3>Join our Discord</h3>
-          <p>Get support, updates, and talk with the team and other users.</p>
-          <a href="#" class="discord-btn" target="_blank">
-            <i class="fab fa-discord"></i> Join Discord
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== TICKETS ==================== -->
-  <div class="page" id="page-tickets">
-    <div class="section">
-      <div class="section-header">
-        <h2>Support Tickets</h2>
-        <p>Need help? Open a ticket and our staff will assist you.</p>
-      </div>
-
-      <div class="ticket-layout">
-        <div class="ticket-sidebar">
-          <h3>Your Tickets</h3>
-          <button class="new-ticket-btn" onclick="openNewTicketModal()">+ New Ticket</button>
-          <div class="ticket-list" id="ticketList">
-            <!-- tickets will be injected here -->
-          </div>
-        </div>
-
-        <div class="ticket-main" id="ticketMain">
-          <div class="empty-state" id="ticketEmpty">
-            <i class="fas fa-ticket"></i>
-            <p>Select a ticket or create a new one</p>
-          </div>
-
-          <div id="ticketContent" style="display:none; flex-direction:column; height:100%;">
-            <div class="ticket-header">
-              <div>
-                <strong id="currentTicketTitle">Ticket Title</strong>
-                <span class="ticket-status status-open" id="currentTicketStatus">Open</span>
-              </div>
-              <button class="close-ticket-btn" id="closeTicketBtn" onclick="closeCurrentTicket()" style="display:none;">Close Ticket</button>
-            </div>
-
-            <div class="ticket-messages" id="ticketMessages"></div>
-
-            <div class="ticket-input-area" id="ticketInputArea">
-              <input type="text" id="ticketReply" placeholder="Type your message..." onkeydown="if(event.key==='Enter')sendReply()">
-              <button class="send-btn" onclick="sendReply()">Send</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AUTH MODAL -->
-  <div class="modal-overlay" id="authModal">
-    <div class="modal">
-      <button class="close-modal" onclick="closeModal()">&times;</button>
-      <h2 id="modalTitle">Welcome back</h2>
-      <p class="subtitle" id="modalSubtitle">Login to your account</p>
-      <div class="form-warning" id="formWarning"></div>
-      <form id="authForm" onsubmit="handleAuth(event)">
-        <div class="form-group" id="usernameGroup">
-          <label>Username</label>
-          <input type="text" id="username" placeholder="Choose a username">
-          <div class="error-msg" id="usernameError">Username is required (min 3 characters)</div>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="email" placeholder="Enter your email">
-          <div class="error-msg" id="emailError">Please enter a valid email</div>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="password" placeholder="Enter password">
-          <div class="error-msg" id="passwordError">Password must be at least 6 characters</div>
-        </div>
-        <button type="submit" class="modal-btn" id="authSubmit">Login</button>
-      </form>
-      <p class="switch-text" id="switchText">
-        Don't have an account? <span onclick="switchMode()">Sign up</span>
-      </p>
-    </div>
-  </div>
-
-  <!-- EDIT MODAL -->
-  <div class="modal-overlay" id="editModal">
-    <div class="modal">
-      <button class="close-modal" onclick="closeModal()">&times;</button>
-      <h2>Edit Account</h2>
-      <p class="subtitle">Update your information</p>
-      <div class="form-warning" id="editWarning"></div>
-      <form onsubmit="saveEdit(event)">
-        <div class="form-group">
-          <label>Username</label>
-          <input type="text" id="editUsername">
-          <div class="error-msg" id="editUsernameError">Username is required (min 3 characters)</div>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="editEmail">
-          <div class="error-msg" id="editEmailError">Please enter a valid email</div>
-        </div>
-        <div class="form-group">
-          <label>New Password (optional)</label>
-          <input type="password" id="editPassword" placeholder="Leave blank to keep current">
-          <div class="error-msg" id="editPasswordError">Password must be at least 6 characters</div>
-        </div>
-        <button type="submit" class="modal-btn">Save Changes</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- NEW TICKET MODAL -->
-  <div class="modal-overlay" id="newTicketModal">
-    <div class="modal">
-      <button class="close-modal" onclick="closeModal()">&times;</button>
-      <h2>Create Ticket</h2>
-      <p class="subtitle">Describe your issue and staff will help you</p>
-      <form onsubmit="createTicket(event)">
-        <div class="form-group">
-          <label>Subject</label>
-          <input type="text" id="ticketSubject" placeholder="Short summary of the problem" required>
-        </div>
-        <div class="form-group">
-          <label>Message</label>
-          <textarea id="ticketMessage" rows="4" placeholder="Explain the issue in detail..." required style="resize:vertical;"></textarea>
-        </div>
-        <button type="submit" class="modal-btn">Submit Ticket</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    let isLoginMode = true;
-    let currentTicketId = null;
-    let tickets = JSON.parse(localStorage.getItem('wyvern_tickets') || '[]');
-
-    // ========== PAGE NAVIGATION ==========
-    function showPage(page) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + page).classList.add('active');
-
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      const nav = document.getElementById('nav-' + page);
-      if (nav) nav.classList.add('active');
-
-      if (page === 'tickets') renderTicketList();
-    }
-
-    // ========== AUTH ==========
-    window.onload = function() {
-      const user = JSON.parse(localStorage.getItem('wyvern_user'));
-      if (user) showLoggedIn(user);
-    };
-
-    function openModal(type) {
-      clearErrors();
-      if (type === 'edit') {
-        const user = JSON.parse(localStorage.getItem('wyvern_user'));
-        document.getElementById('editUsername').value = user.username;
-        document.getElementById('editEmail').value = user.email;
-        document.getElementById('editPassword').value = '';
-        document.getElementById('editModal').classList.add('active');
-        return;
-      }
-      isLoginMode = (type === 'login');
-      updateModal();
-      document.getElementById('authModal').classList.add('active');
-    }
-
-    function closeModal() {
-      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-      clearErrors();
-    }
-
-    function switchMode() {
-      isLoginMode = !isLoginMode;
-      clearErrors();
-      updateModal();
-    }
-
-    function updateModal() {
-      const title = document.getElementById('modalTitle');
-      const subtitle = document.getElementById('modalSubtitle');
-      const submit = document.getElementById('authSubmit');
-      const switchText = document.getElementById('switchText');
-      const usernameGroup = document.getElementById('usernameGroup');
-
-      if (isLoginMode) {
-        title.textContent = 'Welcome back';
-        subtitle.textContent = 'Login to your account';
-        submit.textContent = 'Login';
-        switchText.innerHTML = `Don't have an account? <span onclick="switchMode()">Sign up</span>`;
-        usernameGroup.style.display = 'none';
-      } else {
-        title.textContent = 'Create account';
-        subtitle.textContent = 'Sign up for Wyvern';
-        submit.textContent = 'Sign Up';
-        switchText.innerHTML = `Already have an account? <span onclick="switchMode()">Login</span>`;
-        usernameGroup.style.display = 'block';
-      }
-    }
-
-    function clearErrors() {
-      document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
-      document.querySelectorAll('input').forEach(el => el.classList.remove('error'));
-      document.querySelectorAll('.form-warning').forEach(el => el.classList.remove('show'));
-    }
-
-    function showError(inputId, errorId) {
-      document.getElementById(inputId).classList.add('error');
-      document.getElementById(errorId).classList.add('show');
-    }
-
-    function validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function handleAuth(e) {
-      e.preventDefault();
-      clearErrors();
-
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      let hasError = false;
-
-      if (!isLoginMode && username.length < 3) {
-        showError('username', 'usernameError');
-        hasError = true;
-      }
-      if (!email || !validateEmail(email)) {
-        showError('email', 'emailError');
-        hasError = true;
-      }
-      if (password.length < 6) {
-        showError('password', 'passwordError');
-        hasError = true;
-      }
-      if (hasError) {
-        document.getElementById('formWarning').textContent = 'Please fix the errors above';
-        document.getElementById('formWarning').classList.add('show');
-        return;
-      }
-
-      const user = {
-        username: isLoginMode ? email.split('@')[0] : username,
-        email,
-        password
-      };
-
-      localStorage.setItem('wyvern_user', JSON.stringify(user));
-      showLoggedIn(user);
-      closeModal();
-      showToast(isLoginMode ? 'Successfully logged in' : 'Account created successfully');
-      document.getElementById('authForm').reset();
-    }
-
-    function showLoggedIn(user) {
-      document.getElementById('guestButtons').style.display = 'none';
-      document.getElementById('userMenu').style.display = 'flex';
-      document.getElementById('displayName').textContent = user.username;
-      document.getElementById('userAvatar').textContent = user.username.charAt(0).toUpperCase();
-      const heroBtns = document.getElementById('heroButtons');
-      if (heroBtns) heroBtns.style.display = 'none';
-    }
-
-    function logout() {
-      localStorage.removeItem('wyvern_user');
-      document.getElementById('guestButtons').style.display = 'flex';
-      document.getElementById('userMenu').style.display = 'none';
-      document.getElementById('heroButtons').style.display = 'flex';
-      showToast('Logged out');
-    }
-
-    function saveEdit(e) {
-      e.preventDefault();
-      clearErrors();
-      const username = document.getElementById('editUsername').value.trim();
-      const email = document.getElementById('editEmail').value.trim();
-      const newPass = document.getElementById('editPassword').value;
-      let hasError = false;
-
-      if (username.length < 3) { showError('editUsername', 'editUsernameError'); hasError = true; }
-      if (!email || !validateEmail(email)) { showError('editEmail', 'editEmailError'); hasError = true; }
-      if (newPass && newPass.length < 6) { showError('editPassword', 'editPasswordError'); hasError = true; }
-
-      if (hasError) {
-        document.getElementById('editWarning').textContent = 'Please fix the errors above';
-        document.getElementById('editWarning').classList.add('show');
-        return;
-      }
-
-      const user = JSON.parse(localStorage.getItem('wyvern_user'));
-      user.username = username;
-      user.email = email;
-      if (newPass) user.password = newPass;
-      localStorage.setItem('wyvern_user', JSON.stringify(user));
-      showLoggedIn(user);
-      closeModal();
-      showToast('Account updated successfully');
-    }
-
-    // ========== TICKETS ==========
-    function openNewTicketModal() {
-      const user = JSON.parse(localStorage.getItem('wyvern_user'));
-      if (!user) {
-        showToast('Please login first to create a ticket');
-        openModal('login');
-        return;
-      }
-      document.getElementById('ticketSubject').value = '';
-      document.getElementById('ticketMessage').value = '';
-      document.getElementById('newTicketModal').classList.add('active');
-    }
-
-    function createTicket(e) {
-      e.preventDefault();
-      const user = JSON.parse(localStorage.getItem('wyvern_user'));
-      const subject = document.getElementById('ticketSubject').value.trim();
-      const message = document.getElementById('ticketMessage').value.trim();
-
-      if (!subject || !message) return;
-
-      const ticket = {
-        id: Date.now().toString(),
-        subject,
-        status: 'open',
-        user: user.username,
-        email: user.email,
-        created: new Date().toLocaleString(),
-        messages: [
-          { from: 'user', name: user.username, text: message, time: new Date().toLocaleString() }
-        ]
-      };
-
-      tickets.unshift(ticket);
-      localStorage.setItem('wyvern_tickets', JSON.stringify(tickets));
-      closeModal();
-      renderTicketList();
-      openTicket(ticket.id);
-      showToast('Ticket created successfully');
-    }
-
-    function renderTicketList() {
-      const list = document.getElementById('ticketList');
-      const user = JSON.parse(localStorage.getItem('wyvern_user'));
-
-      // For demo: show all tickets
-      if (tickets.length === 0) {
-        list.innerHTML = '<p style="color:#71717a;font-size:0.9rem;text-align:center;padding:20px 0;">No tickets yet</p>';
-        return;
-      }
-
-      list.innerHTML = tickets.map(t => `
-        <div class="ticket-item ${currentTicketId === t.id ? 'active' : ''}" onclick="openTicket('${t.id}')">
-          <div class="ticket-title">${t.subject}</div>
-          <div class="ticket-meta">
-            ${t.user} • ${t.created}
-            <span class="ticket-status ${t.status === 'open' ? 'status-open' : 'status-closed'}">${t.status}</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openTicket(id) {
-      currentTicketId = id;
-      const ticket = tickets.find(t => t.id === id);
-      if (!ticket) return;
-
-      document.getElementById('ticketEmpty').style.display = 'none';
-      document.getElementById('ticketContent').style.display = 'flex';
-
-      document.getElementById('currentTicketTitle').textContent = ticket.subject;
-      const statusEl = document.getElementById('currentTicketStatus');
-      statusEl.textContent = ticket.status;
-      statusEl.className = 'ticket-status ' + (ticket.status === 'open' ? 'status-open' : 'status-closed');
-
-      // Show close button only if open demo
-      document.getElementById('closeTicketBtn').style.display = ticket.status === 'open' ? 'block' : 'none';
-      document.getElementById('ticketInputArea').style.display = ticket.status === 'open' ? 'flex' : 'none';
-
-      const messagesEl = document.getElementById('ticketMessages');
-      messagesEl.innerHTML = ticket.messages.map(m => `
-        <div class="message ${m.from}">
-          <div class="msg-meta">${m.name} • ${m.time}</div>
-          ${m.text}
-        </div>
-      `).join('');
-
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-      renderTicketList();
-    }
-
-    function sendReply() {
-      const input = document.getElementById('ticketReply');
-      const text = input.value.trim();
-      if (!text || !currentTicketId) return;
-
-      const user = JSON.parse(localStorage.getItem('wyvern_user'));
-      const ticket = tickets.find(t => t.id === currentTicketId);
-      if (!ticket || ticket.status === 'closed') return;
-
-      ticket.messages.push({
-        from: 'user',
-        name: user ? user.username : 'Guest',
-        text,
-        time: new Date().toLocaleString()
-      });
-
-      localStorage.setItem('wyvern_tickets', JSON.stringify(tickets));
-      input.value = '';
-      openTicket(currentTicketId);
-    }
-
-    function closeCurrentTicket() {
-      if (!currentTicketId) return;
-      const ticket = tickets.find(t => t.id === currentTicketId);
-      if (!ticket) return;
-      ticket.status = 'closed';
-      localStorage.setItem('wyvern_tickets', JSON.stringify(tickets));
-      openTicket(currentTicketId);
-      showToast('Ticket closed');
-    }
-
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    }
-
-    // Close modals when clicking outside
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-      });
-    });
-  </script>
+	<div class="glow"></div>
+
+	<nav>
+		<div class="nav-left">
+			<div class="logo" onclick="showPage('home')"><i class="fas fa-dragon"></i></div>
+			<div class="nav-links">
+				<a onclick="showPage('home')" id="nav-home" class="active">Home</a>
+				<a onclick="showPage('features')" id="nav-features">Features</a>
+				<a onclick="showPage('about')" id="nav-about">About</a>
+				<a onclick="showPage('tickets')" id="nav-tickets">Tickets</a>
+			</div>
+		</div>
+
+		<div class="nav-right" id="guestButtons">
+			<button class="login-btn" onclick="openModal('login')">Login</button>
+			<button class="get-started" onclick="openModal('signup')">
+				Get Started <i class="fas fa-arrow-right" style="font-size:12px"></i>
+			</button>
+		</div>
+
+		<div class="user-menu" id="userMenu">
+			<div class="user-info" onclick="openModal('edit')">
+				<div class="user-avatar" id="userAvatar">U</div>
+				<span class="user-name" id="displayName">User</span>
+			</div>
+			<button class="logout-btn" onclick="logout()">Logout</button>
+		</div>
+	</nav>
+
+	<div class="page active" id="page-home">
+		<section class="hero">
+			<div class="left">
+				<h1>Wyvern is the best<br>cheating service</h1>
+				<p>We are 100% safe and secure and we also have a great staff team.</p>
+				<div class="buttons" id="heroButtons">
+					<button class="btn-primary" onclick="openModal('signup')">
+						Get Started <i class="fas fa-arrow-right" style="font-size:13px"></i>
+					</button>
+					<button class="btn-secondary" onclick="showPage('features')">View Features</button>
+				</div>
+			</div>
+			<div class="right">
+				<div class="video-wrapper">
+					<video autoplay muted loop playsinline>
+						<source src="display.mp4" type="video/mp4">
+					</video>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<div class="page" id="page-features">
+		<div class="section">
+			<div class="section-header">
+				<h2>Powerful Features</h2>
+				<p>Everything you need to dominate. Built for performance, stability, and safety.</p>
+			</div>
+			<div class="features-grid">
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-crosshairs"></i></div>
+					<h3>Aimbot</h3>
+					<p>Smooth, customizable aim assistance with multiple targeting modes, FOV control, and visibility checks. Designed to look natural.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-eye"></i></div>
+					<h3>ESP / Wallhack</h3>
+					<p>Full player ESP with boxes, skeletons, health bars, distance, and name tags. Highly configurable and optimized.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-shirt"></i></div>
+					<h3>Skin Changer</h3>
+					<p>Unlock and apply any skin instantly. Works across supported games with a clean and easy-to-use interface.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+					<h3>Undetected</h3>
+					<p>Advanced protection methods and regular updates to stay under the radar. Safety is our top priority.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-sliders"></i></div>
+					<h3>Custom Configs</h3>
+					<p>Save and load your personal settings. Share configs with friends or switch between different playstyles in one click.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-bolt"></i></div>
+					<h3>Performance</h3>
+					<p>Extremely lightweight. Minimal impact on FPS so you can play smoothly even on lower-end systems.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="page" id="page-about">
+		<div class="section">
+			<div class="about-content">
+				<div class="about-text">
+					<h2>Built for safety.<br>Trusted by players.</h2>
+					<p>Wyvern was created with one main goal: deliver powerful tools without putting your account at unnecessary risk. We focus on clean code, careful updates, and real human support.</p>
+					<p>Every release is tested before it goes out. We don’t rush updates and we don’t cut corners on security. Our staff team is active daily and actually helps users instead of leaving them on read.</p>
+					<div class="about-points">
+						<div class="about-point">
+							<i class="fas fa-check-circle"></i>
+							<span>Regular security updates and careful testing before every release</span>
+						</div>
+						<div class="about-point">
+							<i class="fas fa-check-circle"></i>
+							<span>Real human support — not bots, not copy-paste replies</span>
+						</div>
+						<div class="about-point">
+							<i class="fas fa-check-circle"></i>
+							<span>Private and respectful community</span>
+						</div>
+						<div class="about-point">
+							<i class="fas fa-check-circle"></i>
+							<span>Fast ticket responses and honest communication</span>
+						</div>
+					</div>
+				</div>
+				<div class="discord-box">
+					<i class="fab fa-discord"></i>
+					<h3>Join our Discord</h3>
+					<p>Get support, updates, and talk with the team and other users.</p>
+					<a href="#" class="discord-btn" target="_blank">
+						<i class="fab fa-discord"></i> Join Discord
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="page" id="page-tickets">
+		<div class="section">
+			<div class="section-header">
+				<h2>Support Tickets</h2>
+				<p>Need help? Open a ticket and our staff will assist you.</p>
+			</div>
+			<div class="ticket-layout">
+				<div class="ticket-sidebar">
+					<h3>Your Tickets</h3>
+					<button class="new-ticket-btn" onclick="openNewTicketModal()">+ New Ticket</button>
+					<div class="ticket-list" id="ticketList"></div>
+				</div>
+				<div class="ticket-main" id="ticketMain">
+					<div class="empty-state" id="ticketEmpty">
+						<i class="fas fa-ticket"></i>
+						<p>Select a ticket or create a new one</p>
+					</div>
+					<div id="ticketContent" style="display:none; flex-direction:column; height:100%;">
+						<div class="ticket-header">
+							<div>
+								<strong id="currentTicketTitle">Ticket Title</strong>
+								<span class="ticket-status status-open" id="currentTicketStatus">Open</span>
+							</div>
+							<button class="close-ticket-btn" id="closeTicketBtn" onclick="closeCurrentTicket()" style="display:none;">Close Ticket</button>
+						</div>
+						<div class="ticket-messages" id="ticketMessages"></div>
+						<div class="ticket-input-area" id="ticketInputArea">
+							<input type="text" id="ticketReply" placeholder="Type your message..." onkeydown="if(event.key==='Enter')sendReply()">
+							<button class="send-btn" onclick="sendReply()">Send</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="authModal">
+		<div class="modal">
+			<button class="close-modal" onclick="closeModal()">&times;</button>
+			<h2 id="modalTitle">Welcome back</h2>
+			<p class="subtitle" id="modalSubtitle">Login to your account</p>
+			<div class="form-warning" id="formWarning"></div>
+			<form id="authForm" onsubmit="handleAuth(event)">
+				<div class="form-group" id="usernameGroup">
+					<label>Username</label>
+					<input type="text" id="username" placeholder="Choose a username">
+					<div class="error-msg" id="usernameError">Username is required (min 3 characters)</div>
+				</div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" id="email" placeholder="Enter your email">
+					<div class="error-msg" id="emailError">Please enter a valid email</div>
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" id="password" placeholder="Enter password">
+					<div class="error-msg" id="passwordError">Password must be at least 6 characters</div>
+				</div>
+				<button type="submit" class="modal-btn" id="authSubmit">Login</button>
+			</form>
+			<p class="switch-text" id="switchText">
+				Don't have an account? <span onclick="switchMode()">Sign up</span>
+			</p>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="editModal">
+		<div class="modal">
+			<button class="close-modal" onclick="closeModal()">&times;</button>
+			<h2>Edit Account</h2>
+			<p class="subtitle">Update your information</p>
+			<div class="form-warning" id="editWarning"></div>
+			<form onsubmit="saveEdit(event)">
+				<div class="form-group">
+					<label>Username</label>
+					<input type="text" id="editUsername">
+					<div class="error-msg" id="editUsernameError">Username is required (min 3 characters)</div>
+				</div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" id="editEmail">
+					<div class="error-msg" id="editEmailError">Please enter a valid email</div>
+				</div>
+				<div class="form-group">
+					<label>New Password (optional)</label>
+					<input type="password" id="editPassword" placeholder="Leave blank to keep current">
+					<div class="error-msg" id="editPasswordError">Password must be at least 6 characters</div>
+				</div>
+				<button type="submit" class="modal-btn">Save Changes</button>
+			</form>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="newTicketModal">
+		<div class="modal">
+			<button class="close-modal" onclick="closeModal()">&times;</button>
+			<h2>Create Ticket</h2>
+			<p class="subtitle">Describe your issue and staff will help you</p>
+			<form onsubmit="createTicket(event)">
+				<div class="form-group">
+					<label>Subject</label>
+					<input type="text" id="ticketSubject" placeholder="Short summary of the problem" required>
+				</div>
+				<div class="form-group">
+					<label>Message</label>
+					<textarea id="ticketMessage" rows="4" placeholder="Explain the issue in detail..." required style="resize:vertical;"></textarea>
+				</div>
+				<button type="submit" class="modal-btn">Submit Ticket</button>
+			</form>
+		</div>
+	</div>
+
+	<div class="toast" id="toast"></div>
+
+	<script src="script.js"></script>
 </body>
 </html>
