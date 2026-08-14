@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wyvern</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #000000;
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .glow {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 80% 70% at 40% 50%,
+        rgba(120, 20, 180, 0.45) 0%,
+        rgba(80, 10, 140, 0.25) 30%,
+        rgba(0, 0, 0, 0) 70%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      color: #a1a1aa;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .login-btn {
+      color: #a1a1aa;
+      background: none;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .login-btn:hover {
+      color: #fff;
+    }
+
+    .get-started {
+      background: #fff;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .get-started:hover {
+      background: #e5e5e5;
+    }
+
+    /* Logged in */
+    .user-menu {
+      display: none;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .user-info:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .user-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #a1a1aa;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      border-color: rgba(255,255,255,0.3);
+      color: #fff;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      gap: 60px;
+      min-height: calc(100vh - 100px);
+    }
+
+    .left {
+      flex: 1;
+      max-width: 560px;
+    }
+
+    .left h1 {
+      font-size: 3.6rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+    }
+
+    .left p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #a1a1aa;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #000;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #e5e5e5;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .right {
+      flex: 1.1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .video-wrapper {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+    }
+
+    video {
+      width: 100%;
+      display: block;
+      background: #0a0a0a;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #111111;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 36px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      animation: modalIn 0.25s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal h2 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .modal .subtitle {
+      color: #a1a1aa;
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #a855f7;
+    }
+
+    .form-group input.error {
+      border-color: #ef4444;
+    }
+
+    .error-msg {
+      color: #f87171;
+      font-size: 0.8rem;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    .form-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #fbbf24;
+      font-size: 0.82rem;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .form-warning.show {
+      display: block;
+    }
+
+    .modal-btn {
+      width: 100%;
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 14px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .modal-btn:hover {
+      background: #e5e5e5;
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .switch-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #a1a1aa;
+    }
+
+    .switch-text span {
+      color: #c084fc;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .switch-text span:hover {
+      text-decoration: underline;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: #fff;
+    }
+
+    /* Success toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #166534;
+      color: #bbf7d0;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1000px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 24px;
+        gap: 50px;
+      }
+      .left { max-width: 100%; }
+      .left h1 { font-size: 2.6rem; }
+      .left p { margin-left: auto; margin-right: auto; }
+      .buttons { justify-content: center; }
+      .right { justify-content: center; }
+      .nav-links { display: none; }
+      nav { padding: 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-left">
+      <div class="logo"><i class="fas fa-dragon"></i></div>
+      <div class="nav-links">
+        <a href="#">About</a>
+        <a href="#">Features</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+
+    <div class="nav-right" id="guestButtons">
+      <button class="login-btn" onclick="openModal('login')">Login</button>
+      <button class="get-started" onclick="openModal('signup')">
+        Get Started <i class="fas fa-arrow-right" style="font-size:12px"></i>
+      </button>
+    </div>
+
+    <div class="user-menu" id="userMenu">
+      <div class="user-info" onclick="openModal('edit')">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span class="user-name" id="displayName">User</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="left">
+      <h1>Wyvern is the best<br>cheating service</h1>
+      <p>We are 100% safe and secure and we also have a great staff team.</p>
+      <div class="buttons" id="heroButtons">
+        <button class="btn-primary" onclick="openModal('signup')">
+          Get Started <i class="fas fa-arrow-right" style="font-size:13px"></i>
+        </button>
+        <button class="btn-secondary">Learn More</button>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="video-wrapper">
+        <video autoplay muted loop playsinline>
+          <source src="display.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <button class="close-modal" onclick="closeModal()">&times;</button>
+      <h2 id="modalTitle">Welcome back</h2>
+      <p class="subtitle" id="modalSubtitle">Login to your account</p>
+
+      <div class="form-warning" id="formWarning"></div>
+
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group" id="usernameGroup">
+          <label>Username</label>
+          <input type="text" id="username" placeholder="Choose a username" autocomplete="username">
+          <div class="error-msg" id="usernameError">Username is required (min 3 characters)</div>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="Enter your email" autocomplete="email">
+          <div class="error-msg" id="emailError">Please enter a valid email</div>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+          <div class="error-msg" id="passwordError">Password must be at least 6 characters</div>
+        </div>
+
+        <button type="submit" class="modal-btn" id="authSubmit">Login</button>
+      </form>
+
+      <p class="switch-text" id="switchText">
+        Don't have an account? <span onclick="switchMode()">Sign up</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <button class="close-modal" onclick="closeModal()">&times;</button>
+      <h2>Edit Account</h2>
+      <p class="subtitle">Update your information</p>
+
+      <div class="form-warning" id="editWarning"></div>
+
+      <form onsubmit="saveEdit(event)">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="editUsername">
+          <div class="error-msg" id="editUsernameError">Username is required (min 3 characters)</div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="editEmail">
+          <div class="error-msg" id="editEmailError">Please enter a valid email</div>
+        </div>
+        <div class="form-group">
+          <label>New Password (optional)</label>
+          <input type="password" id="editPassword" placeholder="Leave blank to keep current">
+          <div class="error-msg" id="editPasswordError">Password must be at least 6 characters</div>
+        </div>
+        <button type="submit" class="modal-btn">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let isLoginMode = true;
+
+    window.onload = function() {
+      const user = JSON.parse(localStorage.getItem('wyvern_user'));
+      if (user) showLoggedIn(user);
+    };
+
+    function openModal(type) {
+      clearErrors();
+      if (type === 'edit') {
+        const user = JSON.parse(localStorage.getItem('wyvern_user'));
+        document.getElementById('editUsername').value = user.username;
+        document.getElementById('editEmail').value = user.email;
+        document.getElementById('editPassword').value = '';
+        document.getElementById('editModal').classList.add('active');
+        return;
+      }
+
+      isLoginMode = (type === 'login');
+      updateModal();
+      document.getElementById('authModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('authModal').classList.remove('active');
+      document.getElementById('editModal').classList.remove('active');
+      clearErrors();
+    }
+
+    function switchMode() {
+      isLoginMode = !isLoginMode;
+      clearErrors();
+      updateModal();
+    }
+
+    function updateModal() {
+      const title = document.getElementById('modalTitle');
+      const subtitle = document.getElementById('modalSubtitle');
+      const submit = document.getElementById('authSubmit');
+      const switchText = document.getElementById('switchText');
+      const usernameGroup = document.getElementById('usernameGroup');
+
+      if (isLoginMode) {
+        title.textContent = 'Welcome back';
+        subtitle.textContent = 'Login to your account';
+        submit.textContent = 'Login';
+        switchText.innerHTML = `Don't have an account? <span onclick="switchMode()">Sign up</span>`;
+        usernameGroup.style.display = 'none';
+      } else {
+        title.textContent = 'Create account';
+        subtitle.textContent = 'Sign up for Wyvern';
+        submit.textContent = 'Sign Up';
+        switchText.innerHTML = `Already have an account? <span onclick="switchMode()">Login</span>`;
+        usernameGroup.style.display = 'block';
+      }
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('input').forEach(el => el.classList.remove('error'));
+      document.getElementById('formWarning').classList.remove('show');
+      document.getElementById('editWarning').classList.remove('show');
+    }
+
+    function showError(inputId, errorId) {
+      document.getElementById(inputId).classList.add('error');
+      document.getElementById(errorId).classList.add('show');
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      clearErrors();
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      let hasError = false;
+
+      if (!isLoginMode) {
+        if (username.length < 3) {
+          showError('username', 'usernameError');
+          hasError = true;
+        }
+      }
+
+      if (!email || !validateEmail(email)) {
+        showError('email', 'emailError');
+        hasError = true;
+      }
+
+      if (password.length < 6) {
+        showError('password', 'passwordError');
+        hasError = true;
+      }
+
+      if (hasError) {
+        document.getElementById('formWarning').textContent = 'Please fix the errors above';
+        document.getElementById('formWarning').classList.add('show');
+        return;
+      }
+
+      // Save only in browser
+      const user = {
+        username: isLoginMode ? (email.split('@')[0]) : username,
+        email: email,
+        password: password
+      };
+
+      // If logging in, check if account exists (simple demo check)
+      const existing = JSON.parse(localStorage.getItem('wyvern_user'));
+      if (isLoginMode && existing && existing.email !== email) {
+        // For demo we still allow any login, but show a soft warning
+        document.getElementById('formWarning').textContent = 'No account found with this email. You can still continue.';
+        document.getElementById('formWarning').classList.add('show');
+      }
+
+      localStorage.setItem('wyvern_user', JSON.stringify(user));
+      showLoggedIn(user);
+      closeModal();
+      showToast(isLoginMode ? 'Successfully logged in' : 'Account created successfully');
+      document.getElementById('authForm').reset();
+    }
+
+    function showLoggedIn(user) {
+      document.getElementById('guestButtons').style.display = 'none';
+      document.getElementById('userMenu').style.display = 'flex';
+      document.getElementById('displayName').textContent = user.username;
+      document.getElementById('userAvatar').textContent = user.username.charAt(0).toUpperCase();
+
+      // Also hide the hero Get Started button
+      const heroBtns = document.getElementById('heroButtons');
+      if (heroBtns) heroBtns.style.display = 'none';
+    }
+
+    function logout() {
+      localStorage.removeItem('wyvern_user');
+      document.getElementById('guestButtons').style.display = 'flex';
+      document.getElementById('userMenu').style.display = 'none';
+      document.getElementById('heroButtons').style.display = 'flex';
+      showToast('Logged out');
+    }
+
+    function saveEdit(e) {
+      e.preventDefault();
+      clearErrors();
+
+      const username = document.getElementById('editUsername').value.trim();
+      const email = document.getElementById('editEmail').value.trim();
+      const newPass = document.getElementById('editPassword').value;
+
+      let hasError = false;
+
+      if (username.length < 3) {
+        showError('editUsername', 'editUsernameError');
+        hasError = true;
+      }
+
+      if (!email || !validateEmail(email)) {
+        showError('editEmail', 'editEmailError');
+        hasError = true;
+      }
+
+      if (newPass && newPass.length < 6) {
+        showError('editPassword', 'editPasswordError');
+        hasError = true;
+      }
+
+      if (hasError) {
+        document.getElementById('editWarning').textContent = 'Please fix the errors above';
+        document.getElementById('editWarning').classList.add('show');
+        return;
+      }
+
+      const user = JSON.parse(localStorage.getItem('wyvern_user'));
+      user.username = username;
+      user.email = email;
+      if (newPass) user.password = newPass;
+
+      localStorage.setItem('wyvern_user', JSON.stringify(user));
+      showLoggedIn(user);
+      closeModal();
+      showToast('Account updated successfully');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // Close when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+    });
+  </script>
+</body>
+</html>
