@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SQ Checker</title>
+  <title>SQ FILES</title>
   <style>
     * {
       margin: 0;
@@ -11,344 +12,225 @@
     }
 
     body {
-      min-height: 100vh;
-      background: radial-gradient(ellipse at top left, #2a0a3a 0%, #0a0a0f 45%, #000000 100%);
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      color: #fff;
-      overflow-x: hidden;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      overflow-x: hidden;
     }
 
     .container {
-      width: 100%;
-      max-width: 1100px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+      padding: 40px 24px;
       gap: 60px;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
-    /* ===== LEFT SIDE ===== */
+    /* LEFT SIDE */
     .left {
       flex: 1;
-      min-width: 280px;
-      max-width: 460px;
+      max-width: 480px;
     }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(140, 60, 220, 0.15);
-      border: 1px solid rgba(160, 80, 255, 0.35);
-      color: #c9a0ff;
+      display: inline-block;
       font-size: 13px;
       font-weight: 600;
+      letter-spacing: 1.5px;
+      color: #7c3aed;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.3);
       padding: 6px 14px;
-      border-radius: 50px;
-      margin-bottom: 28px;
-      letter-spacing: 0.3px;
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      background: #a855f7;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #a855f7;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
+      border-radius: 20px;
+      margin-bottom: 20px;
     }
 
     h1 {
-      font-size: clamp(2.1rem, 5vw, 3.1rem);
-      font-weight: 700;
-      line-height: 1.15;
-      margin-bottom: 18px;
-      background: linear-gradient(135deg, #ffffff 30%, #c084fc 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #ffffff;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    h1 span {
+      color: #a78bfa;
     }
 
     .subtitle {
-      font-size: 1.15rem;
-      color: #b8a0d0;
-      line-height: 1.6;
+      font-size: 20px;
+      color: #a1a1aa;
       margin-bottom: 32px;
-      max-width: 380px;
+      line-height: 1.5;
     }
 
-    .cta {
-      display: inline-block;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
+    .get-started {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
       color: white;
-      font-size: 1rem;
+      font-size: 16px;
       font-weight: 600;
-      padding: 14px 32px;
-      border-radius: 12px;
-      text-decoration: none;
-      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
-      transition: all 0.25s ease;
+      padding: 14px 28px;
       border: none;
+      border-radius: 12px;
       cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
     }
 
-    .cta:hover {
+    .get-started:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.55);
+      box-shadow: 0 8px 28px rgba(124, 58, 237, 0.5);
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
     }
 
-    /* ===== RIGHT SIDE - PHONE + CARD ===== */
+    .get-started:active {
+      transform: translateY(0);
+    }
+
+    /* RIGHT SIDE - Computer */
     .right {
       flex: 1;
-      min-width: 300px;
       display: flex;
       justify-content: center;
-      position: relative;
-      height: 480px;
     }
 
-    /* Floating Card */
-    .card {
-      position: absolute;
-      top: 10px;
-      right: 30px;
-      width: 260px;
-      height: 158px;
-      background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a855f7 100%);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.45);
-      z-index: 10;
-      animation: floatCard 4s ease-in-out infinite;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
-      animation: shine 5s infinite;
-    }
-
-    @keyframes floatCard {
-      0%, 100% { transform: translateY(0) rotate(3deg); }
-      50% { transform: translateY(-12px) rotate(3deg); }
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-30%) translateY(-30%) rotate(0deg); }
-      100% { transform: translateX(30%) translateY(30%) rotate(0deg); }
-    }
-
-    .card-chip {
-      width: 36px;
-      height: 28px;
-      background: linear-gradient(135deg, #f0d78c, #d4af37);
-      border-radius: 5px;
-      margin-bottom: 28px;
-    }
-
-    .card-number {
-      font-family: 'Courier New', monospace;
-      font-size: 1.15rem;
-      letter-spacing: 2.5px;
-      margin-bottom: 18px;
-      color: #fff;
-    }
-
-    .card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    .card-name {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.85;
-    }
-
-    .card-logo {
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    /* Phone */
-    .phone {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-55%);
-      width: 240px;
-      height: 420px;
-      background: #111;
-      border-radius: 36px;
-      border: 4px solid #2a2a2a;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.7), inset 0 0 0 2px #333;
-      overflow: hidden;
-      z-index: 5;
-    }
-
-    .phone-notch {
-      position: absolute;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      height: 22px;
-      background: #000;
-      border-radius: 20px;
-      z-index: 20;
-    }
-
-    .phone-screen {
+    .computer {
       width: 100%;
-      height: 100%;
-      background: linear-gradient(180deg, #1a0a2e 0%, #0d0618 100%);
-      padding: 50px 18px 20px;
-      display: flex;
-      flex-direction: column;
+      max-width: 460px;
+      background: #111118;
+      border-radius: 16px;
+      border: 1px solid #27272a;
+      box-shadow: 
+        0 0 0 1px rgba(255,255,255,0.03),
+        0 25px 50px -12px rgba(0,0,0,0.6),
+        0 0 80px rgba(124, 58, 237, 0.08);
+      overflow: hidden;
     }
 
-    .app-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .app-header h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #e0d0ff;
-    }
-
-    .app-header p {
-      font-size: 0.7rem;
-      color: #8b7aa8;
-      margin-top: 4px;
-    }
-
-    /* Typing area */
-    .typing-box {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 20px;
-      min-height: 52px;
+    .titlebar {
       display: flex;
       align-items: center;
+      gap: 8px;
+      padding: 14px 16px;
+      background: #18181b;
+      border-bottom: 1px solid #27272a;
     }
 
-    .typed-text {
-      font-family: 'Courier New', monospace;
-      font-size: 0.95rem;
-      color: #d8b4fe;
-      letter-spacing: 1.5px;
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
     }
 
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 16px;
-      background: #a855f7;
-      margin-left: 2px;
-      animation: blink 0.7s infinite;
-      vertical-align: middle;
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .titlebar-text {
+      margin-left: 12px;
+      font-size: 13px;
+      color: #71717a;
+      font-family: 'SF Mono', 'Fira Code', monospace;
     }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+    .terminal {
+      padding: 24px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      min-height: 320px;
+      background: #0c0c10;
     }
 
-    /* Balance reveal */
-    .balance-box {
-      background: rgba(124, 58, 237, 0.15);
-      border: 1px solid rgba(168, 85, 247, 0.35);
-      border-radius: 14px;
-      padding: 18px;
-      text-align: center;
+    .line {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
       opacity: 0;
-      transform: translateY(12px);
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-    .balance-box.show {
+    .line.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .balance-label {
-      font-size: 0.7rem;
-      color: #a78bfa;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 6px;
+    .prompt {
+      color: #7c3aed;
+      flex-shrink: 0;
     }
 
-    .balance-amount {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.5px;
+    .text {
+      color: #d4d4d8;
     }
 
-    .balance-status {
-      margin-top: 8px;
-      font-size: 0.75rem;
-      color: #4ade80;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
+    .check {
+      color: #22c55e;
+      font-weight: bold;
     }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      background: #4ade80;
-      border-radius: 50%;
+    .success {
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: #a78bfa;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .typing {
+      color: #d4d4d8;
     }
 
     /* Responsive */
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       .container {
         flex-direction: column;
-        text-align: center;
+        gap: 48px;
+        padding: 32px 20px;
       }
+
       .left {
+        text-align: center;
         max-width: 100%;
       }
+
+      h1 {
+        font-size: 40px;
+      }
+
       .subtitle {
-        margin-left: auto;
-        margin-right: auto;
+        font-size: 18px;
       }
-      .right {
-        height: 460px;
-        margin-top: 20px;
+
+      .get-started {
+        width: 100%;
+        justify-content: center;
       }
-      .card {
-        right: 50%;
-        transform: translateX(40%) rotate(3deg);
-      }
-      .phone {
-        transform: translateX(-50%);
+
+      .computer {
+        max-width: 100%;
       }
     }
   </style>
@@ -357,81 +239,122 @@
   <div class="container">
     <!-- LEFT -->
     <div class="left">
-      <div class="badge">
-        <span class="badge-dot"></span>
-        Secure &amp; Encrypted
-      </div>
-      <h1>SQ Checker is the best CC checker</h1>
-      <p class="subtitle">We are secure and safe.<br>Check your gift card now!</p>
-      <button class="cta">Check Gift Card</button>
+      <div class="badge">ROBLOX TOOL</div>
+      <h1>&lt;SQ <span>FILES</span>&gt;</h1>
+      <p class="subtitle">SQ Files is the best Roblox explorer.<br>Clean. Fast. Powerful.</p>
+      <button class="get-started" onclick="alert('Coming soon!')">
+        Get Started
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT - Animated Computer -->
     <div class="right">
-      <!-- Floating Card -->
-      <div class="card">
-        <div class="card-chip"></div>
-        <div class="card-number">•••• •••• •••• 4281</div>
-        <div class="card-bottom">
-          <div class="card-name">GIFT CARD</div>
-          <div class="card-logo">VISA</div>
+      <div class="computer">
+        <div class="titlebar">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <div class="titlebar-text">sq-files — terminal</div>
         </div>
-      </div>
-
-      <!-- Phone -->
-      <div class="phone">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="app-header">
-            <h3>SQ Checker</h3>
-            <p>Gift Card Balance</p>
-          </div>
-
-          <div class="typing-box">
-            <span class="typed-text" id="typed"></span><span class="cursor" id="cursor"></span>
-          </div>
-
-          <div class="balance-box" id="balance">
-            <div class="balance-label">Available Balance</div>
-            <div class="balance-amount">$247.50</div>
-            <div class="balance-status">
-              <span class="status-dot"></span>
-              Valid Card
-            </div>
-          </div>
+        <div class="terminal" id="terminal">
+          <!-- Lines injected by JS -->
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const text = "4281 7593 0162 8840";
-    const typedEl = document.getElementById("typed");
-    const cursorEl = document.getElementById("cursor");
-    const balanceEl = document.getElementById("balance");
+    const terminal = document.getElementById('terminal');
 
-    let i = 0;
+    const sequences = [
+      [
+        { type: 'prompt', text: 'Scanning workspace...' },
+        { type: 'prompt', text: 'Reading place file...' },
+        { type: 'check', text: '✓ Scripts detected' },
+        { type: 'check', text: '✓ Models loaded' },
+        { type: 'check', text: '✓ Services mapped' },
+        { type: 'success', text: '→ Game folder found' }
+      ],
+      [
+        { type: 'prompt', text: 'Indexing assets...' },
+        { type: 'prompt', text: 'Parsing modules...' },
+        { type: 'check', text: '✓ RemoteEvents found' },
+        { type: 'check', text: '✓ DataStores ready' },
+        { type: 'check', text: '✓ GUI elements scanned' },
+        { type: 'success', text: '→ Game folder found' }
+      ],
+      [
+        { type: 'prompt', text: 'Connecting to Studio...' },
+        { type: 'prompt', text: 'Fetching hierarchy...' },
+        { type: 'check', text: '✓ Workspace loaded' },
+        { type: 'check', text: '✓ ReplicatedStorage OK' },
+        { type: 'check', text: '✓ ServerScriptService OK' },
+        { type: 'success', text: '→ Game folder found' }
+      ]
+    ];
 
-    function type() {
-      if (i < text.length) {
-        typedEl.textContent += text.charAt(i);
-        i++;
-        setTimeout(type, 85 + Math.random() * 40);
-      } else {
-        // hide cursor after typing
-        setTimeout(() => {
-          cursorEl.style.display = "none";
-          // show balance
-          setTimeout(() => {
-            balanceEl.classList.add("show");
-          }, 400);
-        }, 600);
+    let seqIndex = 0;
+
+    function clearTerminal() {
+      terminal.innerHTML = '';
+    }
+
+    function addLine(content, className = '') {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.innerHTML = content;
+      terminal.appendChild(line);
+      // Force reflow then show
+      requestAnimationFrame(() => {
+        line.classList.add('visible');
+      });
+      return line;
+    }
+
+    async function typeText(element, text, speed = 28) {
+      const span = element.querySelector('.typing') || element;
+      span.textContent = '';
+      for (let i = 0; i < text.length; i++) {
+        span.textContent += text[i];
+        await new Promise(r => setTimeout(r, speed + Math.random() * 20));
       }
     }
 
-    // start typing 
-	  
-    setTimeout(type, 1200);
+    async function runSequence() {
+      clearTerminal();
+      const seq = sequences[seqIndex % sequences.length];
+      seqIndex++;
+
+      for (const item of seq) {
+        if (item.type === 'prompt') {
+          const line = addLine(`<span class="prompt">$</span> <span class="typing"></span><span class="cursor"></span>`);
+          const typingSpan = line.querySelector('.typing');
+          const cursor = line.querySelector('.cursor');
+          await typeText(typingSpan, item.text);
+          cursor.remove();
+        } 
+        else if (item.type === 'check') {
+          await new Promise(r => setTimeout(r, 180));
+          addLine(`<span class="check">${item.text}</span>`);
+        } 
+        else if (item.type === 'success') {
+          await new Promise(r => setTimeout(r, 250));
+          addLine(`<span class="success">${item.text}</span>`);
+        }
+
+        await new Promise(r => setTimeout(r, 320));
+      }
+
+      // Pause then loop
+      await new Promise(r => setTimeout(r, 2200));
+      runSequence();
+    }
+
+    // Start animation
+    setTimeout(runSequence, 600);
   </script>
 </body>
 </html>
